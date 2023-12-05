@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Weather from "./weather";
 
 function App() {
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState("London");
   const [cityInput, setCityInput] = useState("");
 
   return (
