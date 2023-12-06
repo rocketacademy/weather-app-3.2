@@ -11,7 +11,7 @@ export default function Weather({ city }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = () =>
+    const getData = () =>
       axios
         .get(
           `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
@@ -27,10 +27,15 @@ export default function Weather({ city }) {
         .then((weatherResponse) => setData(weatherResponse))
         .catch((error) => setError(error))
         .finally(() => setIsLoading(false));
-    fetchData();
+    getData();
   }, [city]);
 
-  // const { data, error, isLoading } = useSWR(city, async () => {
+  useEffect(() => {
+    console.log(data);
+    return () => console.clear();
+  }, [data]);
+
+  // const { data, error, isLoading} = useSWR(city, async () => {
   //   const locationResponse = await axios.get(
   //     `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
   //   );
@@ -45,15 +50,30 @@ export default function Weather({ city }) {
   // });
 
   return (
-    <>
+    <div className="container">
       <div>DATA HERE!</div>
       {isLoading && <LoadingMessage />}
       {error && <ErrorMessage error={error} />}
-      {data && <DataMessage data={data} />}
-    </>
+      {data && <DataMessage data={data} city={city} />}
+    </div>
   );
 }
 
 const LoadingMessage = () => <code>Loading...</code>;
 const ErrorMessage = ({ error }) => <code>{error}</code>;
-const DataMessage = ({ data }) => <code>{JSON.stringify(data, null, 2)}</code>;
+const DataMessage = ({ data, city }) => (
+  <>
+    {/* <code>{JSON.stringify(data, null, 2)}</code> */}
+    <div className="align-left">
+      <p>City: {city}</p>
+      <p>
+        Condtion: {data.data.weather[0].description}
+        <img
+          src={`https://openweathermap.org/img/wn/${data.data.weather[0].icon}.png`}
+          alt="icon"
+        />
+      </p>
+      <p>Temperature: {data.data.main.temp} °C</p>
+    </div>
+  </>
+);
