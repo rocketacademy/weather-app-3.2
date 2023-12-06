@@ -7,7 +7,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-// import useSWR from "swr";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const units = "metric";
@@ -18,51 +17,65 @@ export default function Weather({ city }) {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // useEffect(() => {
+  //   const getData = () => {
+  //     let lat = "";
+  //     let lon = "";
+  //     return axios
+  //       .get(
+  //         `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
+  //       )
+  //       .then((locationResponse) => {
+  //         lat = locationResponse.data[0].lat;
+  //         lon = locationResponse.data[0].lon;
+  //         return axios.get(
+  //           `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
+  //         );
+  //       })
+  //       .then((weatherResponse) => {
+  //         setWeatherData(weatherResponse);
+  //         return axios.get(
+  //           `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
+  //         );
+  //       })
+  //       .then((forecastResponse) => setForecastData(forecastResponse))
+  //       .catch((error) => setError(error))
+  //       .finally(() => setIsLoading(false));
+  //   };
+  //   getData();
+  // }, [city]);
+
   useEffect(() => {
-    const getData = () => {
-      let lat = "";
-      let lon = "";
-      return axios
+    const getData = () =>
+      axios
         .get(
           `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
         )
         .then((locationResponse) => {
-          lat = locationResponse.data[0].lat;
-          lon = locationResponse.data[0].lon;
-          return axios.get(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
-          );
+          const { lat, lon } = locationResponse.data[0];
+          return axios.all([
+            axios.get(
+              `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
+            ),
+            axios.get(
+              `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
+            ),
+          ]);
         })
-        .then((weatherResponse) => {
-          setWeatherData(weatherResponse);
-          return axios.get(
-            `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
-          );
-        })
-        .then((forecastResponse) => setForecastData(forecastResponse))
+        .then(
+          axios.spread((weatherResponse, forecastResponse) => {
+            setWeatherData(weatherResponse);
+            setForecastData(forecastResponse);
+          })
+        )
         .catch((error) => setError(error))
         .finally(() => setIsLoading(false));
-    };
     getData();
   }, [city]);
 
   useEffect(() => {
     console.log(weatherData);
   }, [weatherData]);
-
-  // const { data, error, isLoading} = useSWR(city, async () => {
-  //   const locationResponse = await axios.get(
-  //     `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
-  //   );
-
-  //   const { lat, lon } = locationResponse.data[0];
-
-  //   const weatherResponse = await axios.get(
-  //     `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
-  //   );
-  //   console.log(weatherResponse.data);
-  //   return weatherResponse.data;
-  // });
 
   return (
     <div className="container">
@@ -97,6 +110,7 @@ const DataMessage = ({ city, weatherData, forecastData }) => {
           />
         </p>
         <p>Temperature: {weatherData.data.main.temp} °C</p>
+        {/* Table copied from MUI */}
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
