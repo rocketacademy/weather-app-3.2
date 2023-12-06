@@ -1,6 +1,6 @@
 import logo from "/logo.png";
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Weather from "./weather";
 
 function App() {
@@ -20,9 +20,11 @@ function App() {
           value={cityInput}
           onChange={(e) => setCityInput(e.target.value)}
         />{" "}
-        <button onClick={() => setCity(cityInput)}>Enter</button>
+        <button onClick={() => setCity(cityInput)}>Check Weather</button>
       </div>
-      <Weather city={city} />
+      <div>
+        <Weather city={city} />
+      </div>
     </>
   );
 }
