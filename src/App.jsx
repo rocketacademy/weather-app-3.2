@@ -15,12 +15,15 @@ export default function App() {
       <h1>Weather App</h1>
       <div className="card">
         {/* Follow the weather app instructions on the gitbook to implement this exercise */}
-        <input
-          type="text"
-          value={cityInput}
-          onChange={(e) => setCityInput(e.target.value)}
-        />{" "}
-        <button onClick={() => setCity(cityInput)}>Check Weather</button>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <input
+            type="text"
+            value={cityInput}
+            onChange={(e) => setCityInput(e.target.value)}
+          />{" "}
+          <button onClick={() => setCity(cityInput)}>Check Weather</button>
+        </form>
+
         <div>
           <Weather city={city} />
         </div>

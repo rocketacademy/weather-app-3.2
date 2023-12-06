@@ -119,7 +119,7 @@ const TableForecast = ({ forecastData }) => (
         <TableRow>
           <TableCell>Date</TableCell>
           <TableCell align="right">City</TableCell>
-          <TableCell align="right">Temperature</TableCell>
+          <TableCell align="right">Temperature °C</TableCell>
           <TableCell align="right">Weather</TableCell>
           <TableCell align="right">Icon</TableCell>
         </TableRow>
@@ -135,7 +135,7 @@ const TableForecast = ({ forecastData }) => (
             <TableCell align="right">
               {forecastData.city.name}, {forecastData.city.country}
             </TableCell>
-            <TableCell align="right">{list.main.temp}</TableCell>
+            <TableCell align="right">{list.main.temp} °C</TableCell>
             <TableCell align="right">{list.weather[0].description}</TableCell>
             <TableCell align="right">
               <img
