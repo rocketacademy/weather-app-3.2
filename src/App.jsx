@@ -3,7 +3,7 @@ import "./App.css";
 import { useState } from "react";
 import Weather from "./weather";
 
-function App() {
+export default function App() {
   const [city, setCity] = useState("London");
   const [cityInput, setCityInput] = useState("");
 
@@ -28,5 +28,3 @@ function App() {
     </>
   );
 }
-
-export default App;

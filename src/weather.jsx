@@ -79,15 +79,11 @@ export default function Weather({ city }) {
 
   return (
     <div className="container">
-      <div>DATA HERE!</div>
       {isLoading && <LoadingMessage />}
       {error && <ErrorMessage error={error} />}
-      {weatherData && forecastData && (
-        <DataMessage
-          weatherData={weatherData}
-          forecastData={forecastData}
-          city={city}
-        />
+      {weatherData && <DataMessage city={city} weatherData={weatherData} />}
+      {forecastData && (
+        <TableForecast city={city} forecastData={forecastData} />
       )}
     </div>
   );
@@ -95,58 +91,51 @@ export default function Weather({ city }) {
 
 const LoadingMessage = () => <code>Loading...</code>;
 const ErrorMessage = ({ error }) => <code>{error}</code>;
-const DataMessage = ({ city, weatherData, forecastData }) => {
-  return (
-    <>
-      {/* <code>{JSON.stringify(forecastData, null, 2)}</code> */}
-      <div className="align-left">
-        <p>Now</p>
-        <p>City: {city}</p>
-        <p>
-          Condtion: {weatherData.data.weather[0].description}
-          <img
-            src={`https://openweathermap.org/img/wn/${weatherData.data.weather[0].icon}.png`}
-            alt="icon"
-          />
-        </p>
-        <p>Temperature: {weatherData.data.main.temp} °C</p>
-        {/* Table copied from MUI */}
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Date</TableCell>
-                <TableCell align="right">City</TableCell>
-                <TableCell align="right">Temperature</TableCell>
-                <TableCell align="right">Weather</TableCell>
-                <TableCell align="right">Icon</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {forecastData.data.list.map((list, index) => (
-                <TableRow
-                  key={index}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                  <TableCell component="th" scope="row">
-                    {list.dt_txt}
-                  </TableCell>
-                  <TableCell align="right">{city}</TableCell>
-                  <TableCell align="right">{list.main.temp}</TableCell>
-                  <TableCell align="right">
-                    {list.weather[0].description}
-                  </TableCell>
-                  <TableCell align="right">
-                    <img
-                      src={`https://openweathermap.org/img/wn/${list.weather[0].icon}.png`}
-                      alt="icon"
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-    </>
-  );
-};
+const DataMessage = ({ city, weatherData }) => (
+  <div className="align-left">
+    <p>City: {city}</p>
+    <p>
+      Condtion: {weatherData.data.weather[0].description}
+      <img
+        src={`https://openweathermap.org/img/wn/${weatherData.data.weather[0].icon}.png`}
+        alt="icon"
+      />
+    </p>
+    <p>Temperature: {weatherData.data.main.temp} °C</p>
+  </div>
+);
+const TableForecast = ({ city, forecastData }) => (
+  <TableContainer component={Paper}>
+    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <TableHead>
+        <TableRow>
+          <TableCell>Date</TableCell>
+          <TableCell align="right">City</TableCell>
+          <TableCell align="right">Temperature</TableCell>
+          <TableCell align="right">Weather</TableCell>
+          <TableCell align="right">Icon</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {forecastData.data.list.map((list, index) => (
+          <TableRow
+            key={index}
+            sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+            <TableCell component="th" scope="row">
+              {list.dt_txt}
+            </TableCell>
+            <TableCell align="right">{city}</TableCell>
+            <TableCell align="right">{list.main.temp}</TableCell>
+            <TableCell align="right">{list.weather[0].description}</TableCell>
+            <TableCell align="right">
+              <img
+                src={`https://openweathermap.org/img/wn/${list.weather[0].icon}.png`}
+                alt="icon"
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+);
