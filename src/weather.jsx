@@ -71,6 +71,11 @@ export default function Weather({ city }) {
         .catch((error) => setError(error))
         .finally(() => setIsLoading(false));
     getData();
+    return () => {
+      setWeatherData(null);
+      setForecastData(null);
+      setIsLoading(true);
+    };
   }, [city]);
 
   useEffect(() => {
@@ -90,7 +95,9 @@ export default function Weather({ city }) {
 }
 
 const LoadingMessage = () => <code>Loading...</code>;
+
 const ErrorMessage = ({ error }) => <code>{error}</code>;
+
 const DataMessage = ({ city, weatherData }) => (
   <div className="align-left">
     <p>City: {city}</p>
@@ -104,6 +111,7 @@ const DataMessage = ({ city, weatherData }) => (
     <p>Temperature: {weatherData.data.main.temp} °C</p>
   </div>
 );
+
 const TableForecast = ({ city, forecastData }) => (
   <TableContainer component={Paper}>
     <Table sx={{ minWidth: 650 }} aria-label="simple table">

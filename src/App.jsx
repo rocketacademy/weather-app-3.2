@@ -4,7 +4,7 @@ import { useState } from "react";
 import Weather from "./weather";
 
 export default function App() {
-  const [city, setCity] = useState("London");
+  const [city, setCity] = useState("");
   const [cityInput, setCityInput] = useState("");
 
   return (
