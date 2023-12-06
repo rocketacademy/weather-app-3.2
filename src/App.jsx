@@ -4,7 +4,7 @@ import { useState } from "react";
 import Weather from "./weather";
 
 export default function App() {
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState("Singapore");
   const [cityInput, setCityInput] = useState("");
 
   return (
@@ -21,9 +21,9 @@ export default function App() {
           onChange={(e) => setCityInput(e.target.value)}
         />{" "}
         <button onClick={() => setCity(cityInput)}>Check Weather</button>
-      </div>
-      <div>
-        <Weather city={city} />
+        <div>
+          <Weather city={city} />
+        </div>
       </div>
     </>
   );

@@ -15,7 +15,7 @@ export default function Weather({ city }) {
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState(null);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // useEffect(() => {
   //   const getData = () => {
@@ -46,7 +46,7 @@ export default function Weather({ city }) {
   // }, [city]);
 
   useEffect(() => {
-    const getData = () =>
+    const getData = () => {
       axios
         .get(
           `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
@@ -64,23 +64,21 @@ export default function Weather({ city }) {
         })
         .then(
           axios.spread((weatherResponse, forecastResponse) => {
-            setWeatherData(weatherResponse);
-            setForecastData(forecastResponse);
+            setWeatherData(weatherResponse.data);
+            setForecastData(forecastResponse.data);
           })
         )
-        .catch((error) => setError(error))
+        .catch((error) => setError(error.message))
         .finally(() => setIsLoading(false));
+    };
     getData();
     return () => {
+      setError(null);
+      setIsLoading(true);
       setWeatherData(null);
       setForecastData(null);
-      setIsLoading(true);
     };
   }, [city]);
-
-  useEffect(() => {
-    console.log(weatherData);
-  }, [weatherData]);
 
   return (
     <div className="container">
@@ -98,21 +96,23 @@ const LoadingMessage = () => <code>Loading...</code>;
 
 const ErrorMessage = ({ error }) => <code>{error}</code>;
 
-const DataMessage = ({ city, weatherData }) => (
+const DataMessage = ({ weatherData }) => (
   <div className="align-left">
-    <p>City: {city}</p>
     <p>
-      Condtion: {weatherData.data.weather[0].description}
+      City: {weatherData.name}, {weatherData.sys.country}
+    </p>
+    <p>
+      Condtion: {weatherData.weather[0].description}
       <img
-        src={`https://openweathermap.org/img/wn/${weatherData.data.weather[0].icon}.png`}
+        src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`}
         alt="icon"
       />
     </p>
-    <p>Temperature: {weatherData.data.main.temp} °C</p>
+    <p>Temperature: {weatherData.main.temp} °C</p>
   </div>
 );
 
-const TableForecast = ({ city, forecastData }) => (
+const TableForecast = ({ forecastData }) => (
   <TableContainer component={Paper}>
     <Table sx={{ minWidth: 650 }} aria-label="simple table">
       <TableHead>
@@ -125,14 +125,16 @@ const TableForecast = ({ city, forecastData }) => (
         </TableRow>
       </TableHead>
       <TableBody>
-        {forecastData.data.list.map((list, index) => (
+        {forecastData.list.map((list, index) => (
           <TableRow
             key={index}
             sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
             <TableCell component="th" scope="row">
               {list.dt_txt}
             </TableCell>
-            <TableCell align="right">{city}</TableCell>
+            <TableCell align="right">
+              {forecastData.city.name}, {forecastData.city.country}
+            </TableCell>
             <TableCell align="right">{list.main.temp}</TableCell>
             <TableCell align="right">{list.weather[0].description}</TableCell>
             <TableCell align="right">
