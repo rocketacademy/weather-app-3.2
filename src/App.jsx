@@ -10,7 +10,9 @@ function App() {
   const [displayTemp, setDisplayTemp] = useState("");
   // const [displayTime, setDisplayTime] = useState("");
 
-  const geoApi = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=60f5db867acf01e9b394eb0774a23465`;
+  const geoApi = `https://api.openweathermap.org/geo/1.0/direct?q=${city
+    .toLowerCase()
+    .trim()}&limit=1&appid=60f5db867acf01e9b394eb0774a23465`;
   // const weatherApi = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=60f5db867acf01e9b394eb0774a23465`;
 
   const handleSubmit = (e) => {
@@ -59,7 +61,7 @@ function App() {
         <form onSubmit={handleSubmit} action="" method="get">
           <label htmlFor="">City: </label>
           <input
-            onChange={(e) => setCity(e.target.value.toLowerCase().trim())}
+            onChange={(e) => setCity(e.target.value)}
             type="text"
             name=""
             id=""
