@@ -10,6 +10,7 @@ function App() {
   const [userInputCity, setuserInputCity] = useState("");
   const [showTemperature, setShowTemperature] = useState("");
   const [showCityName, setShowCityName] = useState("");
+  const [showForecast, setShowForecast] = useState("");
 
   //prevent form from refreshing
   const handleSubmit = (e) => {
@@ -50,7 +51,20 @@ function App() {
         )
       )
       .then((response) => {
-        console.log(response);
+        const { data: forecastWeather } = response;
+        console.log("weather forecast", forecastWeather);
+        //show every 3 hours for 5 days
+        console.log("temp forecast list", forecastWeather.list);
+        console.log("city", forecastWeather.city.name);
+
+        //extract data from temp forecast list array
+        const forecasts = forecastWeather.list.map((forecast) => ({
+          timestamp: forecast.dt_txt,
+          temperature: forecast.main.temp,
+        }));
+
+        setShowForecast(forecasts);
+        setShowCityName(forecastWeather.city.name);
       })
       .catch((error) => {
         console.log("ERROR!");
@@ -60,11 +74,29 @@ function App() {
   const weatherInfo = showCityName ? (
     <div>
       <p>City: {showCityName} </p>
-      <p>Temperature: {showTemperature} °C</p>
+      <p>Weather Forecast:</p>
+      <p>(5-day forecast with a 3-hour interval)</p>
+      <ul>
+        {showForecast.map((forecast, index) => (
+          <li key={index}>
+            {forecast.timestamp} - {forecast.temperature}°C
+          </li>
+        ))}
+      </ul>
     </div>
   ) : (
     <p>Hello. Please key in a city's name.</p>
   );
+
+  // Base
+  // const weatherInfo = showCityName ? (
+  //   <div>
+  //     <p>City: {showCityName} </p>
+  //     <p>Temperature: {showTemperature} °C</p>
+  //   </div>
+  // ) : (
+  //   <p>Hello. Please key in a city's name.</p>
+  // );
 
   return (
     <>
