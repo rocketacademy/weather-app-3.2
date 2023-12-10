@@ -15,7 +15,7 @@ export default function App() {
       <h1>Weather App</h1>
       <div className="card">
         {/* Follow the weather app instructions on the gitbook to implement this exercise */}
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={(e) => (e.preventDefault(), e.target.reset())}>
           <input
             type="text"
             value={cityInput}

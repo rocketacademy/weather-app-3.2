@@ -17,34 +17,7 @@ export default function Weather({ city }) {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // useEffect(() => {
-  //   const getData = () => {
-  //     let lat = "";
-  //     let lon = "";
-  //     return axios
-  //       .get(
-  //         `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
-  //       )
-  //       .then((locationResponse) => {
-  //         lat = locationResponse.data[0].lat;
-  //         lon = locationResponse.data[0].lon;
-  //         return axios.get(
-  //           `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
-  //         );
-  //       })
-  //       .then((weatherResponse) => {
-  //         setWeatherData(weatherResponse);
-  //         return axios.get(
-  //           `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
-  //         );
-  //       })
-  //       .then((forecastResponse) => setForecastData(forecastResponse))
-  //       .catch((error) => setError(error))
-  //       .finally(() => setIsLoading(false));
-  //   };
-  //   getData();
-  // }, [city]);
-
+  // Chaining promises with axios
   useEffect(() => {
     const getData = () => {
       axios
@@ -53,7 +26,7 @@ export default function Weather({ city }) {
         )
         .then((locationResponse) => {
           const { lat, lon } = locationResponse.data[0];
-          return axios.all([
+          return Promise.all([
             axios.get(
               `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
             ),
@@ -62,12 +35,10 @@ export default function Weather({ city }) {
             ),
           ]);
         })
-        .then(
-          axios.spread((weatherResponse, forecastResponse) => {
-            setWeatherData(weatherResponse.data);
-            setForecastData(forecastResponse.data);
-          })
-        )
+        .then(([weatherResponse, forecastResponse]) => {
+          setWeatherData(weatherResponse.data);
+          setForecastData(forecastResponse.data);
+        })
         .catch((error) => setError(error.message))
         .finally(() => setIsLoading(false));
     };
@@ -79,6 +50,104 @@ export default function Weather({ city }) {
       setForecastData(null);
     };
   }, [city]);
+
+  // Chaining promises with fetch
+  // useEffect(() => {
+  //   const getData = () => {
+  //     fetch(
+  //       `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
+  //     )
+  //       .then((response) => response.json())
+  //       .then((locationResponse) => {
+  //         const { lat, lon } = locationResponse[0];
+  //         return Promise.all([
+  //           fetch(
+  //             `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
+  //           ).then((response) => response.json()),
+  //           fetch(
+  //             `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
+  //           ).then((response) => response.json()),
+  //         ]);
+  //       })
+  //       .then(([weatherResponse, forecastResponse]) => {
+  //         setWeatherData(weatherResponse);
+  //         setForecastData(forecastResponse);
+  //       })
+  //       .catch((error) => setError(error.message))
+  //       .finally(() => setIsLoading(false));
+  //   };
+  //   getData();
+  //   return () => {
+  //     setError(null);
+  //     setIsLoading(true);
+  //     setWeatherData(null);
+  //     setForecastData(null);
+  //   };
+  // }, [city]);
+
+  //Async/await with axios
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     try {
+  //       const locationResponse = await axios.get(
+  //         `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
+  //       );
+  //       const { lat, lon } = locationResponse.data[0];
+  //       const weatherResponse = await axios.get(
+  //         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
+  //       );
+  //       const forecastResponse = await axios.get(
+  //         `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
+  //       );
+  //       setWeatherData(weatherResponse.data);
+  //       setForecastData(forecastResponse.data);
+  //     } catch (error) {
+  //       setError(error.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   getData();
+  //   return () => {
+  //     setError(null);
+  //     setIsLoading(true);
+  //     setWeatherData(null);
+  //     setForecastData(null);
+  //   };
+  // }, [city]);
+
+  //Async/await with Fetch
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     try {
+  //       const locationResponse = await fetch(
+  //         `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
+  //       );
+  //       const { lat, lon } = (await locationResponse.json())[0];
+  //       const weatherResponse = await fetch(
+  //         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
+  //       );
+  //       const forecastResponse = await fetch(
+  //         `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}`
+  //       );
+  //       setWeatherData(await weatherResponse.json());
+  //       setForecastData(await forecastResponse.json());
+  //     } catch (error) {
+  //       setError(error.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   getData();
+  //   return () => {
+  //     setError(null);
+  //     setIsLoading(true);
+  //     setWeatherData(null);
+  //     setForecastData(null);
+  //   };
+  // }, [city]);
+
+  //learn tanstack-query and swr next for API calls
 
   return (
     <div className="container">
