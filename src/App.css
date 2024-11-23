@@ -36,3 +36,40 @@
 .card {
   padding: 2em;
 }
+
+.container-input {
+  display: flex;
+  flex-direction: column;
+  gap: 2vw;
+  align-items: center;
+}
+
+.container-input > button {
+  width: fit-content;
+  background-color: green;
+}
+
+.container-input > button:hover {
+  background-color: blue;
+}
+
+.container-weather {
+  display: flex;
+  flex-direction: row;
+  gap: 3vw;
+}
+
+.table {
+  display: grid;
+}
+
+.column-header,
+.row-hour {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 equal columns */
+  text-align: center;
+}
+
+.column-header {
+  font-weight: bold;
+}
