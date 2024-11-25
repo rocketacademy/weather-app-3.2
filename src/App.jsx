@@ -1,15 +1,16 @@
-import logo from "/logo.png";
+// import logo from "/logo.png";
 import "./App.css";
+
+import Weather from "./Weather"
 
 function App() {
   return (
     <>
-      <div>
+      {/* <div>
         <img src={logo} className="logo react" alt="Rocket logo" />
-      </div>
-      <h1>Weather App</h1>
+      </div> */}
       <div className="card">
-        {/* Follow the weather app instructions on the gitbook to implement this exercise */}
+        <Weather />
       </div>
     </>
   );
