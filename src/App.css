@@ -36,3 +36,18 @@
 .card {
   padding: 2em;
 }
+
+input {
+  margin-right: 2em;
+}
+
+.align-left {
+  text-align: left;
+  img {
+    margin: -1rem 0rem -1rem 0rem;
+  }
+}
+
+.container {
+  padding: 1rem;
+}

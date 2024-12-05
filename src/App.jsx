@@ -1,7 +1,12 @@
 import logo from "/logo.png";
 import "./App.css";
+import { useState } from "react";
+import Weather from "./weather";
 
-function App() {
+export default function App() {
+  const [city, setCity] = useState("Singapore");
+  const [cityInput, setCityInput] = useState("");
+
   return (
     <>
       <div>
@@ -10,9 +15,19 @@ function App() {
       <h1>Weather App</h1>
       <div className="card">
         {/* Follow the weather app instructions on the gitbook to implement this exercise */}
+        <form onSubmit={(e) => (e.preventDefault(), e.target.reset())}>
+          <input
+            type="text"
+            value={cityInput}
+            onChange={(e) => setCityInput(e.target.value)}
+          />{" "}
+          <button onClick={() => setCity(cityInput)}>Check Weather</button>
+        </form>
+
+        <div>
+          <Weather city={city} />
+        </div>
       </div>
     </>
   );
 }
-
-export default App;
